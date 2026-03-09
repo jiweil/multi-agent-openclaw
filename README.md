@@ -78,7 +78,7 @@ npm run server
 npm run ui:dev
 ```
 
-Open the URL shown in the terminal output.
+Open [http://localhost:5174](http://localhost:5174) in your browser.
 
 ## How it works
 
@@ -166,14 +166,8 @@ Multi-Agent OpenClaw extends OpenClaw's capabilities by adding a **multi-agent p
 | `ANTHROPIC_API_KEY` | * | Anthropic API key (default provider) |
 | `OPENAI_API_KEY` | * | OpenAI API key |
 | `GEMINI_API_KEY` | * | Google Gemini API key |
-| `LLM_PROVIDER` | No | Explicit provider name (auto-detected from API keys if not set) |
-| `LLM_API_KEY` | No | API key override (for OpenAI-compatible providers) |
-| `LLM_BASE_URL` | No | Base URL for OpenAI-compatible providers |
-| `LLM_MODEL` | No | Model override for both planning and execution |
-| `EXECUTION_MODEL` | No | Model override for execution only |
-| `OPENCLAW_REPO` | No | Path to your OpenClaw checkout (for gateway features) |
 
-\* At least one provider API key is required.
+\* At least one provider API key is required. See `.env.example` for all options.
 
 ## Architecture
 
