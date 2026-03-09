@@ -9,6 +9,7 @@ loadEnv();
 
 import { generatePlan, chatPlan, executePlan, type Plan, type Turn } from "./planner.js";
 import { saveRun, loadAllRuns } from "./history.js";
+import { describeProvider } from "./llm.js";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
@@ -381,6 +382,11 @@ async function handleRequest(req: IncomingMessage, res: ServerResponse) {
     })));
   }
 
+  /* ── Provider info ── */
+  if (url === "/api/provider" && method === "GET") {
+    return json(res, { provider: describeProvider() });
+  }
+
   serveStatic(res, url);
 }
 
@@ -402,6 +408,7 @@ export function startServer(port = 3100) {
   server.listen(port, () => {
     console.log(`\n  Multi-Agent OpenClaw Server`);
     console.log(`  ─────────────────────`);
+    console.log(`  Provider: ${describeProvider()}`);
     console.log(`  API:  http://localhost:${port}/api`);
     console.log(`  UI:   http://localhost:${port}`);
     console.log(`  WS:   ws://localhost:${port}/ws\n`);

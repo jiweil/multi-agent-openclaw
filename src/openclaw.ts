@@ -1,4 +1,4 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { llmChat } from "./llm.js";
 
 const AGENT_SYSTEM_PROMPT = `You are an AI agent executing a specific task within a multi-agent workflow.
 
@@ -13,7 +13,7 @@ Rules:
 const sessionHistories = new Map<string, Array<{ role: "user" | "assistant"; content: string }>>();
 
 /**
- * Execute an agent step by calling the Anthropic API directly.
+ * Execute an agent turn by calling the configured LLM provider.
  * Maintains per-session conversation history for multi-turn context.
  */
 export async function callAgent(opts: {
@@ -26,21 +26,18 @@ export async function callAgent(opts: {
   const sessionKey = opts.sessionId ?? opts.agentId;
 
   try {
-    const client = new Anthropic();
     const history = sessionHistories.get(sessionKey) ?? [];
     history.push({ role: "user", content: opts.message });
 
-    const response = await client.messages.create({
-      model: process.env.EXECUTION_MODEL ?? "claude-sonnet-4-20250514",
-      max_tokens: 4096,
+    const model = process.env.EXECUTION_MODEL ?? process.env.LLM_MODEL;
+    const response = await llmChat({
       system: AGENT_SYSTEM_PROMPT,
       messages: history,
+      model: model || undefined,
+      maxTokens: 4096,
     });
 
-    const text = response.content
-      .filter((block): block is Anthropic.TextBlock => block.type === "text")
-      .map((block) => block.text)
-      .join("\n\n");
+    const text = response.text;
 
     history.push({ role: "assistant", content: text });
     sessionHistories.set(sessionKey, history);

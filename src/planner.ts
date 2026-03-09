@@ -1,4 +1,4 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { llmChat } from "./llm.js";
 import { callAgent } from "./openclaw.js";
 
 export type Agent = {
@@ -53,19 +53,14 @@ export async function generatePlan(opts: {
   goal: string;
   model?: string;
 }): Promise<Plan> {
-  const client = new Anthropic();
-
-  const response = await client.messages.create({
-    model: opts.model ?? "claude-sonnet-4-20250514",
-    max_tokens: 4096,
+  const response = await llmChat({
     system: PLAN_SYSTEM_PROMPT,
     messages: [{ role: "user", content: opts.goal }],
+    model: opts.model,
+    maxTokens: 4096,
   });
 
-  const text = response.content
-    .filter((block): block is Anthropic.TextBlock => block.type === "text")
-    .map((block) => block.text)
-    .join("");
+  const text = response.text;
 
   const parsed = JSON.parse(text);
 
@@ -120,27 +115,22 @@ export async function chatPlan(opts: {
   currentPlan?: Plan | null;
   model?: string;
 }): Promise<{ plan: Plan | null; message: string }> {
-  const client = new Anthropic();
-
   let system = CHAT_SYSTEM_PROMPT;
   if (opts.currentPlan) {
     system += `\n\nCurrent plan:\n${JSON.stringify(opts.currentPlan, null, 2)}`;
   }
 
-  const response = await client.messages.create({
-    model: opts.model ?? "claude-sonnet-4-20250514",
-    max_tokens: 4096,
+  const response = await llmChat({
     system,
     messages: opts.messages.map((m) => ({
       role: m.role as "user" | "assistant",
       content: m.content,
     })),
+    model: opts.model,
+    maxTokens: 4096,
   });
 
-  const text = response.content
-    .filter((block): block is Anthropic.TextBlock => block.type === "text")
-    .map((block) => block.text)
-    .join("");
+  const text = response.text;
 
   const parsed = JSON.parse(text);
 

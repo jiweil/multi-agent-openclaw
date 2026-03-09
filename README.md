@@ -40,10 +40,22 @@ cd ui && npm install && cd ..
 cp .env.example .env
 ```
 
-Edit `.env`:
+Edit `.env` with your preferred LLM provider:
 
-```
+```bash
+# Anthropic (default)
 ANTHROPIC_API_KEY=sk-ant-api03-your-key-here
+
+# — or OpenAI —
+OPENAI_API_KEY=sk-your-key-here
+
+# — or Google Gemini —
+GEMINI_API_KEY=your-key-here
+
+# — or any OpenAI-compatible provider (Groq, OpenRouter, Together, Ollama, vLLM, xAI, Mistral, …) —
+LLM_PROVIDER=groq
+LLM_API_KEY=your-key-here
+LLM_BASE_URL=https://api.groq.com/openai/v1
 ```
 
 ### 3. Run
@@ -62,7 +74,7 @@ Open the URL shown in the terminal output.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  1. PLANNING  (Anthropic API, multi-turn chat)                  │
+│  1. PLANNING  (any LLM provider, multi-turn chat)               │
 │                                                                 │
 │  User describes scenario  ──►  LLM extracts agents + rounds    │
 │                                                                 │
@@ -78,7 +90,7 @@ Open the URL shown in the terminal output.
                          │
                          ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  2. EXECUTION  (Anthropic API, per-agent sessions)              │
+│  2. EXECUTION  (any LLM provider, per-agent sessions)           │
 │                                                                 │
 │  Round 1: each agent gets  goal + "this is round 1"            │
 │           all agents run in parallel                            │
@@ -120,21 +132,47 @@ This project is part of the [OpenClaw](https://github.com/nicepkg/openclaw) ecos
 
 Multi-Agent OpenClaw extends OpenClaw's capabilities by adding a **multi-agent planning and coordination layer** with a visual UI for designing and monitoring complex agent scenarios.
 
+## Supported LLM providers
+
+| Provider | Config |
+|---|---|
+| **Anthropic** (default) | `ANTHROPIC_API_KEY` |
+| **OpenAI** | `OPENAI_API_KEY` |
+| **Google Gemini** | `GEMINI_API_KEY` |
+| **Groq** | `LLM_PROVIDER=groq` + `LLM_API_KEY` + `LLM_BASE_URL=https://api.groq.com/openai/v1` |
+| **OpenRouter** | `LLM_PROVIDER=openrouter` + `OPENROUTER_API_KEY` + `LLM_BASE_URL=https://openrouter.ai/api/v1` |
+| **Together** | `LLM_PROVIDER=together` + `TOGETHER_API_KEY` + `LLM_BASE_URL=https://api.together.xyz/v1` |
+| **xAI (Grok)** | `LLM_PROVIDER=xai` + `XAI_API_KEY` + `LLM_BASE_URL=https://api.x.ai/v1` |
+| **Mistral** | `LLM_PROVIDER=mistral` + `MISTRAL_API_KEY` + `LLM_BASE_URL=https://api.mistral.ai/v1` |
+| **Cerebras** | `LLM_PROVIDER=cerebras` + `LLM_API_KEY` + `LLM_BASE_URL=https://api.cerebras.ai/v1` |
+| **Ollama** (local) | `LLM_PROVIDER=ollama` + `LLM_BASE_URL=http://localhost:11434/v1` + `LLM_MODEL=llama3` |
+| **vLLM** (local) | `LLM_PROVIDER=vllm` + `LLM_BASE_URL=http://localhost:8000/v1` + `LLM_MODEL=your-model` |
+| Any OpenAI-compatible | `LLM_PROVIDER=custom` + `LLM_API_KEY` + `LLM_BASE_URL` + `LLM_MODEL` |
+
 ## Environment variables
 
 | Variable | Required | Description |
 |---|---|---|
-| `ANTHROPIC_API_KEY` | Yes | Anthropic API key for planning and execution |
+| `ANTHROPIC_API_KEY` | * | Anthropic API key (default provider) |
+| `OPENAI_API_KEY` | * | OpenAI API key |
+| `GEMINI_API_KEY` | * | Google Gemini API key |
+| `LLM_PROVIDER` | No | Explicit provider name (auto-detected from API keys if not set) |
+| `LLM_API_KEY` | No | API key override (for OpenAI-compatible providers) |
+| `LLM_BASE_URL` | No | Base URL for OpenAI-compatible providers |
+| `LLM_MODEL` | No | Model override for both planning and execution |
+| `EXECUTION_MODEL` | No | Model override for execution only |
 | `OPENCLAW_REPO` | No | Path to your OpenClaw checkout (for gateway features) |
-| `EXECUTION_MODEL` | No | Model for agent execution (default: `claude-sonnet-4-20250514`) |
+
+\* At least one provider API key is required.
 
 ## Architecture
 
 ```
 src/
 ├── env.ts          — .env file loader
-├── planner.ts      — Anthropic API for plan generation + execution engine
-├── openclaw.ts     — Agent execution via Anthropic API
+├── llm.ts          — Unified LLM provider abstraction (Anthropic, OpenAI, Google, OpenAI-compatible)
+├── planner.ts      — Plan generation + execution engine
+├── openclaw.ts     — Agent execution via LLM abstraction
 ├── server.ts       — HTTP/WebSocket server (REST API + real-time updates)
 └── main.ts         — CLI entry point
 

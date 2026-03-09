@@ -15,7 +15,9 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
+    "@google/genai": "^1.44.0",
     "@types/ws": "^8.18.1",
+    "openai": "^6.27.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.0",
     "ws": "^8.19.0"
