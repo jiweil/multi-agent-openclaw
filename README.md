@@ -1,6 +1,16 @@
-# Multi-Agent OpenClaw
+<p align="center">
+  <img src="logo.png" width="160" />
+</p>
 
-A multi-agent orchestration platform built on [OpenClaw](https://github.com/nicepkg/openclaw). Design, refine, and execute multi-agent workflows through a conversational UI.
+<h1 align="center">Multi-Agent OpenClaw</h1>
+
+<p align="center">
+  <strong>Design, refine, and execute multi-agent workflows through a conversational UI.</strong>
+</p>
+
+<p align="center">
+  Built on <a href="https://github.com/nicepkg/openclaw">OpenClaw</a> · MIT License
+</p>
 
 ## What it does
 
