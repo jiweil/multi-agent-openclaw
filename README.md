@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  Built on <a href="https://github.com/nicepkg/openclaw">OpenClaw</a> · MIT License
+  Built on <a href="https://github.com/openclaw/openclaw">OpenClaw</a> · MIT License
 </p>
 
 ## What it does
@@ -133,7 +133,7 @@ Open [http://localhost:5174](http://localhost:5174) in your browser.
 
 ## Built on OpenClaw
 
-This project is part of the [OpenClaw](https://github.com/nicepkg/openclaw) ecosystem. OpenClaw provides the foundation for AI agent orchestration, including:
+This project is part of the [OpenClaw](https://github.com/openclaw/openclaw) ecosystem. OpenClaw provides the foundation for AI agent orchestration, including:
 
 - Agent identity and session management
 - Multi-channel communication (Discord, Telegram, Slack, CLI)
