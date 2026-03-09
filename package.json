@@ -1,0 +1,26 @@
+{
+  "name": "multi-agent-openclaw",
+  "version": "0.1.0",
+  "description": "Multi-agent orchestration platform built on OpenClaw",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/main.ts",
+    "build": "tsc",
+    "dev": "tsx watch src/main.ts",
+    "server": "tsx src/server.ts",
+    "server:dev": "tsx watch src/server.ts",
+    "ui:dev": "npm --prefix ui run dev",
+    "ui:build": "npm --prefix ui run build"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@types/ws": "^8.18.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.0",
+    "ws": "^8.19.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
